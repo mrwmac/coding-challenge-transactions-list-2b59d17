@@ -1,5 +1,11 @@
 import { gql } from "@apollo/client";
 
+/**
+ * Task - GraphQL Query
+ * A mismatch of query terms. Was able to remove receipt to get it to work
+ * admittedly I thought it might be something to do with the __typename  but it appears not.
+ */
+
 export const GetAllTransactions = gql`
   query GetAllTransactions {
     getAllTransactions {
@@ -11,7 +17,6 @@ export const GetAllTransactions = gql`
       data
       chainId
       hash
-      receipt
     }
   }
 `;
