@@ -46,10 +46,19 @@ const Navigation: React.FC = () => {
     }
   }, []);
 
+  /**
+   * Task 6 - UI: crude version of the styling issues is to remove the hidden class 
+   * on the button container so that that the connect button is able to wrap
+   * underneath transaction and go full width.
+   * Also specified that in small screens Transaction List heading would 
+   * Center and put a little margin below to give it some space. So the thwo are stacked
+   * Medium screen the two items split to their respective ends of the nav
+   * 
+   */
   return (
     <header className="flex flex-wrap sm:justify-start sm:flex-nowrap z-50 w-ful text-sm py-4 bg-gray-800">
       <nav className="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-center  md:justify-between xl:justify-between sm:mb-px">
           <a
             className="flex-none text-xl font-semibold dark:text-white"
             href="."
@@ -57,7 +66,7 @@ const Navigation: React.FC = () => {
             Transactions List
           </a>
         </div>
-        <div className="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:block">
+        <div className="hs-collapse overflow-hidden transition-all duration-300 basis-full grow sm:block">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-end sm:mt-0 sm:pl-5">
             {wallet && (
               <>
