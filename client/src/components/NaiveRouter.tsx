@@ -33,7 +33,12 @@ const NaiveRouter: React.FC = () => {
     return null;
   };
 
-  if (route === "/" || route === "/transactions") {
+  /**
+   * Task 4 - Navigation and Routing: Attempt to mitigate deadend that sometimes can happen
+   * when navigating where the last viewed page wasn't transactions list and user clicks "Go Back"
+   * Go back to where, you might ask: nowhere interesting.
+   */
+  if (["/", "/transactions", "/transaction/"].includes(route)) {
     return <TransactionList />;
   } else if (matchRoute(/\/transaction\/(\w+)/)) {
     const params = matchRoute(/\/transaction\/(\w+)/);
