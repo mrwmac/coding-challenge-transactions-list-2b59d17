@@ -1,10 +1,25 @@
 import React, { useCallback, useState } from "react";
 import Onboard, { WalletState } from "@web3-onboard/core";
+/*
+ * Task -Wallet Connection
+ * To allow the any browser injected wallets the injected wallets package seemed appropriate.
+ * I restricted it down to Metamask as this seemed to be the specific goal of the task.
+ * I could have included the MetaMask SDK to allow QR codes .e.g. for installed or hardware wallets
+ *  ... if this task was intended for production.  I could also
+ *  have made the list of available wallets more permissive if I believed this was intended for
+ *  relaase but as a local or contained task it seemed more efficient to just expedite development with a 
+ * this simple solution. [The code also checks to see if the wallet is Metamask]
+ */
+import injectedModule from "@web3-onboard/injected-wallets";
 
 import SendTransaction from "./SendTransaction";
 
+//Task 2: just get the wallet, could do a test for MetaMask here and fail early
+//TODO fail early test
+const injectedWallet = injectedModule();
+
 const onboard = Onboard({
-  wallets: [],
+  wallets: [injectedWallet],
   chains: [
     {
       id: "123456",
