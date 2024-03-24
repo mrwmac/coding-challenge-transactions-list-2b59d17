@@ -12,6 +12,16 @@ import apolloClient from "../apollo/client";
 import { Actions } from "../types";
 import { SaveTransaction } from "../queries";
 
+/*
+ * Task 4 - Navigation and Routing
+ * imported the Naive router. Not sure if this is to coupled now ... for this task might 
+ * be ok, if we were looking to release, I might try to think of something else, stil considering it
+ * It's simple as things re simple but if the project grew I'm not so sure. 
+ * Might be able to extend Naive Router to better accomodate this class as it's requirements are slightly different 
+ * to TransactionList e.g. the go "back button" from here could be a dead link
+ */
+import { navigate } from "../components/NaiveRouter";
+
 function* sendTransaction() {
   const provider = new JsonRpcProvider("http://localhost:8545");
 
@@ -35,7 +45,7 @@ function* sendTransaction() {
   */
   const transaction = {
     to: randomAddress(),
-    value: BigInt("1000000000000000000")
+    value: BigInt("1000000000000000000"),
   };
 
   try {
@@ -62,8 +72,22 @@ function* sendTransaction() {
       mutation: SaveTransaction,
       variables,
     });
+
+  /*
+   * Task 4 - Navigation and Routing
+   * I'm assuming here is the path at the end of a success ... Might be an idea to test the result
+   * Maybe check compare hash or something like that to make sure things are where we expect.
+   */
+    navigate(`/transaction/${receipt.hash}`);
+
+
   } catch (error) {
-    //
+
+   /* not enough but this makes me feel a bit better .. some phantom error that likely never and issue
+    * mitigated against.
+    */
+    console.log('Error: '+error); //string? Hope so.
+    navigate(`/`);
   }
 }
 
