@@ -20,9 +20,14 @@ import { SaveTransaction } from "../queries";
  * Might be able to extend Naive Router to better accomodate this class as it's requirements are slightly different 
  * to TransactionList e.g. the go "back button" from here could be a dead link
  */
+/**
+ * Task 5 - Wire in the form added data. For thi sproject not so worries about accounting for different types
+ * of trnsaction.
+ * @param action: any
+ */
 import { navigate } from "../components/NaiveRouter";
 
-function* sendTransaction() {
+function* sendTransaction(action: any) {
   const provider = new JsonRpcProvider("http://localhost:8545");
 
   const walletProvider = new BrowserProvider(window.web3.currentProvider);
@@ -31,21 +36,16 @@ function* sendTransaction() {
 
   const accounts: Array<{ address: string }> = yield provider.listAccounts();
 
-  const randomAddress = () => {
-    const min = 1;
-    const max = 19;
-    const random = Math.round(Math.random() * (max - min) + min);
-    return accounts[random].address;
-  };
+  /**
+   * Task 5 - Wire in form values
+   * recipient address and amount passed to transaction
+   */
+  const recpientAddress = action.payload['input-recipient'];
+  const amount = BigInt(action.payload['input-amount']);
 
-  /*
-  * Task 3 - Redux Saga: We need a BigNumber for the WEI, luckily JavaScript has
-  * supported this with BigInt (no need for ethers BigNumber, though the etherum conversion)
-  * functions might still be good.
-  */
   const transaction = {
-    to: randomAddress(),
-    value: BigInt("1000000000000000000"),
+    to: recpientAddress,
+    value: amount,
   };
 
   try {
