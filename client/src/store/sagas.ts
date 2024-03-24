@@ -28,9 +28,14 @@ function* sendTransaction() {
     return accounts[random].address;
   };
 
+  /*
+  * Task 3 - Redux Saga: We need a BigNumber for the WEI, luckily JavaScript has
+  * supported this with BigInt (no need for ethers BigNumber, though the etherum conversion)
+  * functions might still be good.
+  */
   const transaction = {
     to: randomAddress(),
-    value: 1000000000000000000,
+    value: BigInt("1000000000000000000")
   };
 
   try {
