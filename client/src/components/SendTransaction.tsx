@@ -143,7 +143,7 @@ const SendTransaction: React.FC = () => {
                   placeholder="Amount (WEI)"
                   {...register("input-amount", {
                     required: "Please ent1er an amount in WEI",
-                    valueAsNumber: true                  
+                    valueAsNumber: true               
                   }
                   )}
                 /> {errors['input-amount']  && <p role="alert">{errors['input-amount'].message?.toString()}</p>}

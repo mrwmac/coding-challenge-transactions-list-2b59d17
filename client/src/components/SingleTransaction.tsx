@@ -1,5 +1,7 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
+//Task 7 - Human readable values: import formatEther from ethers
+import { formatEther } from "ethers";
 import { GetSingleTransaction } from "../queries";
 import { SingleTransactionData } from "../types";
 import { navigate } from "./NaiveRouter";
@@ -16,6 +18,10 @@ const SingleTransaction: React.FC<SingleTransactionProps> = ({ id }) => {
     { variables: { hash: id } },
   );
 
+    /*
+   * Task 7: Using formatEther from ethers.js to do the lifting for the conversion.
+   * Set amount value from from WEI String to ETH
+   */
   if (loading) {
     return (
       <div className="flex flex-col mt-20">
@@ -35,6 +41,7 @@ const SingleTransaction: React.FC<SingleTransactionProps> = ({ id }) => {
       </div>
     );
   }
+
 
   const { hash, to, from, value } = data?.getTransaction || {};
 
@@ -66,7 +73,7 @@ const SingleTransaction: React.FC<SingleTransactionProps> = ({ id }) => {
             <span className="font-bold">Recipient Address:</span> {to}
           </p>
           <p>
-            <span className="font-bold">Amount:</span> {value} ETH
+            <span className="font-bold">Amount:</span> {value && formatEther(value)} ETH
           </p>
         </div>
       </div>

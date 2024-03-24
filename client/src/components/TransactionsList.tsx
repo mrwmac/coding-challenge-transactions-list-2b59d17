@@ -1,5 +1,6 @@
 import React from "react";
 import { useQuery } from "@apollo/client";
+import {formatEther} from "ethers";
 import { GetAllTransactions } from "../queries";
 import { TransactionsData } from "../types";
 import { navigate } from "./NaiveRouter";
@@ -43,7 +44,7 @@ const TransactionList: React.FC = () => {
                   className="bg-white shadow-sm p-4 md:p-5 border rounded border-gray-300 mt-3 hover:border-blue-500 cursor-pointer"
                   onClick={() => handleNavigate(hash)}
                 >
-                  <span className="font-bold">{value} ETH</span> sent from{" "}
+                  <span className="font-bold">{value && formatEther(value)} ETH</span> sent from{" "}
                   <span className="font-bold">{from}</span> to{" "}
                   <span className="font-bold">{to}</span>
                 </div>
