@@ -1,30 +1,68 @@
-import React, { useCallback } from "react";
+/**
+* Task 5 - Wire in the Form
+* included useeState  so that I'm able to utilise usestate and showModal (hide) function
+*/
+import React, { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
+// isAddress for validating ethereum address on form entry
+import { isAddress } from "ethers"; 
 
 import { Actions } from "../types";
 
+/**
+* Task 5 - Wire in the Form
+* Use state able to show / hide Modal
+* handleDispath now called through onSubmit instead of from button click event.
+*/
 const SendTransaction: React.FC = () => {
-  const dispatch = useDispatch();
-  const { handleSubmit } = useForm();
+  const dispatch = useDispatch();  
+  const [showModal, setShowModal] = useState(false); 
+  
+  const { register, handleSubmit, formState:{isSubmitSuccessful, errors } } = useForm({
+    mode: "onBlur"
+  });
+  
+  //Task 5- Wire in the Form set showmodal to false before dispatch
+  const onSubmit = (data: any) => {
+    //hide modal after send. Should be able to reroute with popup if unsuccesseful transaction
+    setShowModal(false);
 
-  const onSubmit = (data: any) => console.log(data);
-
-  const handleDispatch = useCallback(() => {
+    //handle dispatch now adorned with payload data from form.
+    handleDispatch(data);
+  }
+  
+  //added payload to send transaction
+  const handleDispatch = useCallback((data: any) => {
     dispatch({
       type: Actions.SendTransaction,
+      payload: data
     });
   }, [dispatch]);
 
-  return (
+  /**
+   * Task 5 - Wire in the Form
+   * Cursor events: removed tailwind pointer-events-none class in Amount and recipient address to allow us to input values
+   * Validation:  Registered sabove fiields to allow application of required (not allowed to be empty), though
+   *              for this task I suppose having an auto generated address was also fine. Maybe I should actually. allow
+   *              them both to be empty?  But this way at least we can test things are definitely wired in correctly
+   *              Recipient address is validated by ether isAddress
+   *              Amount is a validated number field
+   * Modal: Toggle modal with showModal property and setShowmodal imported from useState. Send sets showModal state to true
+   *        Showing the modal. Close automatically seems to do the opposite but set it explicitly to make myself feel better
+   */
+  return ( 
     <>
+   
       <button
         data-hs-overlay="#hs-basic-modal"
         type="button"
         className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm"
+        onClick={() => setShowModal(true)}
       >
         Send
       </button>
+      { showModal ? ( 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div
           id="hs-basic-modal"
@@ -72,7 +110,7 @@ const SendTransaction: React.FC = () => {
                   id="input-sender"
                   className="opacity-70 pointer-events-none py-3 px-4 block bg-gray-50 border-gray-800 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 w-full"
                   placeholder="Sender Address (Autocompleted)"
-                  disabled
+                  disabled              
                 />
                 <label
                   htmlFor="input-recipient"
@@ -83,10 +121,15 @@ const SendTransaction: React.FC = () => {
                 <input
                   type="text"
                   id="input-recipient"
-                  className="opacity-70 pointer-events-none py-3 px-4 block bg-gray-50 border-gray-800 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 w-full"
+                  className="opacity-70  py-3 px-4 block bg-gray-50 border-gray-800 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 w-full"
                   placeholder="Recipient Address"
-                  disabled
-                />
+                  {...register("input-recipient", {
+                    required: "Please enter a recipient address",
+                    validate: (value) =>  isAddress(value) || "Please enter a valid ethereum address"                    
+                  }
+                  )}
+                /> {errors['input-recipient']  && <p role="alert">{errors['input-recipient'].message?.toString()}</p>}
+                
                 <label
                   htmlFor="input-amount"
                   className="block text-sm font-bold my-2"
@@ -96,22 +139,26 @@ const SendTransaction: React.FC = () => {
                 <input
                   type="number"
                   id="input-amount"
-                  className="opacity-70 pointer-events-none py-3 px-4 block bg-gray-50 border-gray-800 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 w-full"
-                  placeholder="Amount"
-                  disabled
-                />
+                  className="opacity-70  py-3 px-4 block bg-gray-50 border-gray-800 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 w-full"
+                  placeholder="Amount (WEI)"
+                  {...register("input-amount", {
+                    required: "Please ent1er an amount in WEI",
+                    valueAsNumber: true                  
+                  }
+                  )}
+                /> {errors['input-amount']  && <p role="alert">{errors['input-amount'].message?.toString()}</p>}
               </div>
               <div className="flex justify-end items-center gap-x-2 py-3 px-4 border-t">
                 <button
                   type="button"
                   className="hs-dropdown-toggle py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm"
                   data-hs-overlay="#hs-basic-modal"
+                  onClick={() => setShowModal(false)}
                 >
                   Close
                 </button>
                 <button
-                  type="button"
-                  onClick={handleDispatch}
+                  type="submit" // changed to type submit isntead of button so form handler run
                   className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm"
                 >
                   Send
@@ -121,6 +168,7 @@ const SendTransaction: React.FC = () => {
           </div>
         </div>
       </form>
+    ): null}
     </>
   );
 };
