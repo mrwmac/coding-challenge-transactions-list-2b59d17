@@ -38,7 +38,9 @@ const Navigation: React.FC = () => {
 
     const [metamaskWallet] = wallets;
 
+    //Please don't crash if there's no wallet
     if (
+      metamaskWallet &&
       metamaskWallet.label === "MetaMask" &&
       metamaskWallet.accounts[0].address
     ) {
