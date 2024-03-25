@@ -55,12 +55,15 @@ const Navigation: React.FC = () => {
    * Medium screen the two items split to their respective ends of the nav
    * 
    */
+
+  //Also changed transactions header text colour as I haven't eaten enough carrots so it was difficult to see
+
   return (
     <header className="flex flex-wrap sm:justify-start sm:flex-nowrap z-50 w-ful text-sm py-4 bg-gray-800">
       <nav className="max-w-[85rem] w-full mx-auto px-4 sm:flex sm:items-center sm:justify-between">
         <div className="flex items-center justify-center  md:justify-between xl:justify-between sm:mb-px">
           <a
-            className="flex-none text-xl font-semibold dark:text-white"
+            className="flex-none text-xl font-semibold text-white "
             href="."
           >
             Transactions List
