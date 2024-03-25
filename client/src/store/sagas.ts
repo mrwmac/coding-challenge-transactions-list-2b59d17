@@ -6,6 +6,7 @@ import {
   TransactionReceipt,
   BrowserProvider,
   Signer,
+  parseUnits
 } from "ethers";
 
 import apolloClient from "../apollo/client";
@@ -24,6 +25,9 @@ import { SaveTransaction } from "../queries";
  * Task 5 - Wire in the form added data. For thi sproject not so worries about accounting for different types
  * of trnsaction.
  * @param action: any
+ * 
+ * Task 7 - Human Readable Values: Converted form data now expected in ETH so 
+ * adapted the amount to convert from ETH to A BigInt using Ether.js
  */
 import { navigate } from "../components/NaiveRouter";
 
@@ -34,14 +38,22 @@ function* sendTransaction(action: any) {
 
   const signer: Signer = yield walletProvider.getSigner();
 
-  const accounts: Array<{ address: string }> = yield provider.listAccounts();
 
-  /**
-   * Task 5 - Wire in form values
-   * recipient address and amount passed to transaction
-   */
-  const recpientAddress = action.payload['input-recipient'];
-  const amount = BigInt(action.payload['input-amount']);
+  let recpientAddress = action.payload['input-recipient'], 
+       amount = action.payload['input-amount'];
+
+   //could do with more comprehensive checking here really
+  if(!recpientAddress)
+  {
+    throw new Error('No recipient address found');
+  }
+
+  if(!amount && amount !== 0)
+  {
+    throw new Error('No input in ETH found');
+  }
+
+  amount = parseUnits(amount, "ether");
 
   const transaction = {
     to: recpientAddress,

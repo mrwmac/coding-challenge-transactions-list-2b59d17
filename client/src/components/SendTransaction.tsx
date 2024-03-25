@@ -51,6 +51,10 @@ const SendTransaction: React.FC = () => {
    * Modal: Toggle modal with showModal property and setShowmodal imported from useState. Send sets showModal state to true
    *        Showing the modal. Close automatically seems to do the opposite but set it explicitly to make myself feel better
    */
+  /**
+   * Task 7 - Human Readable values: Added pattern matching to allow decimals for ETH
+   * values to be sent from the form
+   */
   return ( 
     <>
    
@@ -137,13 +141,15 @@ const SendTransaction: React.FC = () => {
                   Amount:
                 </label>
                 <input
-                  type="number"
                   id="input-amount"
                   className="opacity-70  py-3 px-4 block bg-gray-50 border-gray-800 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 w-full"
-                  placeholder="Amount (WEI)"
+                  placeholder="Amount (ETH)"
                   {...register("input-amount", {
-                    required: "Please ent1er an amount in WEI",
-                    valueAsNumber: true               
+                    required: "Please enter an amount in ETH",
+                    pattern:{
+                      value: /(^0(\.\d+|$)|^[1-9]\d*\.?\d*)/,
+                      message: "Please a valid amount in ETH"
+                    }              
                   }
                   )}
                 /> {errors['input-amount']  && <p role="alert">{errors['input-amount'].message?.toString()}</p>}
